@@ -249,8 +249,10 @@ class Beacons extends Starline {
 						reject(error);
 					}
 					this.list = data.devices;
-					console.log(this.list[0]);
 					resolve(true);
+					if (this.autoUpdate) {
+						setTimeout(this.updateList, 600000);
+					}
 				});
 			} else {
 				resolve(false);
