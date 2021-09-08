@@ -323,9 +323,69 @@ class State extends Command {
 	}
 }
 
+class Track extends Starline {
+	deviceID;
+
+	execute(timeFrom, timeTo) {
+		return new Promise((resolve, reject) => {
+			if (this.isReady()) {
+				let data = {
+					begin : timeFrom,
+					end : timeTo,
+					split_way : false,
+					div_days : true,
+					time_zone : true,
+					filtering : true
+					};
+				let url = this.apiURL(1, 'device', this.deviceID, 'ways');
+				super.execute(url, 'POST', {Cookie : this.getAuthCookie()}, null, data, (error, data) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(data);
+				});
+			} else {
+				reject(false);
+			}
+		});
+	}
+
+	constructor(authObject, deviceID) {
+		super(authObject);
+		this.deviceID = deviceID;
+	}
+}
+
+class ODB extends Starline {
+	deviceID;
+
+	execute(timeFrom, timeTo) {
+		return new Promise((resolve, reject) => {
+			if (this.isReady()) {
+				let url = this.apiURL(1, 'device', this.deviceID, 'obd_params');
+				super.execute(url, 'POST', {Cookie : this.getAuthCookie()}, null, null, (error, data) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(data);
+				});
+			} else {
+				reject(false);
+			}
+		});
+	}
+
+	constructor(authObject, deviceID) {
+		super(authObject);
+		this.deviceID = deviceID;
+	}
+}
+
 /*Export classes*/
 exports.StarlineAuth = StarlineAuth;
 exports.Starline = Starline;
 exports.Beacons = Beacons;
 exports.Command = Command;
 exports.State = State;
+exports.Track = Track;
+exports.ODB = ODB;
