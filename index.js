@@ -48,9 +48,9 @@ class StarlineURLs extends Basis {
 	authPrefix = 'https://id.starline.ru/apiV3/';
 	apiPrefix = 'https://developer.starline.ru/json/';
 	
-	apiApp = 'application/';
-	apiUser = 'user/';
-	apiDevice = 'device/';
+	apiURL(version, subject, id, command) {
+		return `${this.apiPrefix}v${version}/${subject}/${id}/${command}`;
+	}
 
 	/*Unified execute action with callback*/
 	execute(url, method, headers, params, data, callback) {
@@ -111,19 +111,19 @@ class StarlineAuth extends StarlineURLs {
 		/*4 steps for authorization on SLNET*/
 		this.#md5secret = crypto.createHash('md5').update(this.#secret).digest('hex');
 		/*Step 1*/
-		this.execute(`${this.authPrefix}${this.apiApp}getCode`, 'GET', null, 
+		this.execute(`${this.authPrefix}application/getCode`, 'GET', null, 
 			{appId : this.#appId, secret : this.#md5secret}, null, (error, data) => {
 				if (!error && data.state) {
 					/*Step 2*/
 					this.#md5secret = crypto.createHash('md5').update(this.#secret + data.desc.code).digest('hex');
-					this.execute(`${this.authPrefix}${this.apiApp}getToken`, 'GET', null, 
+					this.execute(`${this.authPrefix}application/getToken`, 'GET', null, 
 						{appId : this.#appId, secret : this.#md5secret}, null, (error, data) => {
 							if (!error && data.state) {
 								/*Step 3*/
 								let bodyFormData = new FormData();
 								bodyFormData.append('login', this.#login);
 								bodyFormData.append('pass', crypto.createHash('sha1').update(this.#password).digest('hex'));
-								this.execute(`${this.authPrefix}${this.apiUser}login`, 'POST', {
+								this.execute(`${this.authPrefix}user/login`, 'POST', {
 										'content-type' : `multipart/form-data;boundary=${bodyFormData.getBoundary()}`,
 										token : data.desc.token
 									}, 
@@ -243,7 +243,7 @@ class Beacons extends Starline {
 	updateList() {
 		return new Promise(async (resolve, reject) => {
 			if (super.isReady()) {
-				let url = `${this.apiPrefix}v3/${this.apiUser}/${this.getUserId()}/user_info`;
+				let url = this.apiURL(2, 'user', this.getUserId(), 'user_info');
 				this.execute(url, 'POST', {Cookie : this.getAuthCookie()}, null, null, (error, data) => {
 					if (error) {
 						reject(error);
@@ -266,7 +266,40 @@ class Beacons extends Starline {
 	}
 }
 
+class Command extends Starline {
+	deviceID;
+
+	execute(command, value, variables) {
+		return new Promise((resolve, reject) => {
+			if (this.isReady()) {
+				let data = {
+					type : command,
+					value : value
+				};
+				if (variables && this.isObject(variables)) {
+					data.variables = variables;
+				}
+				let url = this.apiURL(2, 'device', this.deviceID, 'async');
+				super.execute(url, 'POST', {Cookie : this.getAuthCookie()}, null, data, (error, data) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(data.cmd_id);
+				});
+			} else {
+				reject(false);
+			}
+		});
+	}
+
+	constructor(authObject, deviceID) {
+		super(authObject);
+		this.deviceID = deviceID;
+	}
+}
+
 /*Export classes*/
 exports.StarlineAuth = StarlineAuth;
 exports.Starline = Starline;
 exports.Beacons = Beacons;
+exports.Command = Command;
