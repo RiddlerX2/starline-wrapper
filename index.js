@@ -266,6 +266,7 @@ class Beacons extends Starline {
 	}
 }
 
+/*Executes async command*/
 class Command extends Starline {
 	deviceID;
 
@@ -298,6 +299,7 @@ class Command extends Starline {
 	}
 }
 
+/*Check state of the executed command*/
 class State extends Command {
 	commandID;
 
@@ -323,6 +325,7 @@ class State extends Command {
 	}
 }
 
+/*Get track for device*/
 class Track extends Starline {
 	deviceID;
 
@@ -356,10 +359,11 @@ class Track extends Starline {
 	}
 }
 
+/*Get ODB state for device*/
 class ODB extends Starline {
 	deviceID;
 
-	execute(timeFrom, timeTo) {
+	execute() {
 		return new Promise((resolve, reject) => {
 			if (this.isReady()) {
 				let url = this.apiURL(1, 'device', this.deviceID, 'obd_params');
