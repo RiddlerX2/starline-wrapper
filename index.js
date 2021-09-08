@@ -298,8 +298,34 @@ class Command extends Starline {
 	}
 }
 
+class State extends Command {
+	commandID;
+
+	execute() {
+		return new Promise((resolve, reject) => {
+			if (this.isReady()) {
+				let url = this.apiURL(2, 'device', this.deviceID, 'async') + '/' + this.commandID;
+				super.execute(url, 'GET', {Cookie : this.getAuthCookie()}, null, null, (error, data) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(data);
+				});
+			} else {
+				reject(false);
+			}
+		});
+	}
+
+	constructor(authObject, deviceID, commandID) {
+		super(authObject, deviceID);
+		this.commandID = commandID;
+	}
+}
+
 /*Export classes*/
 exports.StarlineAuth = StarlineAuth;
 exports.Starline = Starline;
 exports.Beacons = Beacons;
 exports.Command = Command;
+exports.State = State;

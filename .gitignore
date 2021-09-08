@@ -80,4 +80,5 @@ typings/
 
 # tests
 dist/
+test*
 test.js
