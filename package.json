@@ -1,0 +1,30 @@
+{
+  "name": "starline-wrapper",
+  "version": "1.0.1",
+  "description": "Module provide simple access to REST API of the Starline alarm config and navigation data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Starline",
+    "REST",
+    "Navigation",
+    "Alarm",
+    "Hijack",
+    "Tracking"
+  ],
+  "author": "RiddlerX2",
+  "license": "GPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RiddlerX2/starline-wrapper"
+  },
+  "engines": {
+    "node": ">=13.6.0"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "form-data": "^4.0.0"
+  }
+}
