@@ -107,7 +107,7 @@ class StarlineAuth extends StarlineURLs {
 	failData;
 	
 	doAuth () {
-		this.#cookieSLNET = '';
+		this.setAuthCookie('');
 		/*4 steps for authorization on SLNET*/
 		this.#md5secret = crypto.createHash('md5').update(this.#secret).digest('hex');
 		/*Step 1*/
@@ -135,7 +135,7 @@ class StarlineAuth extends StarlineURLs {
 														this.#userId = data.user_id;
 														let cookie = headers['set-cookie'][0];
 														cookie = cookie.substring(0, cookie.indexOf(';'));
-														this.#cookieSLNET = cookie;
+														this.setAuthCookie(cookie);
 													} else {
 														this.#failed = true;
 														this.failData = error || data;
@@ -171,12 +171,16 @@ class StarlineAuth extends StarlineURLs {
 		this.doAuth();
 		/*Refresh authorization each 3 hours (max lifetime 4 hours)*/
 		if (!!autoRefresh) {
-			setInterval(this.doAuth, 10800000);
+			setInterval(() => {this.doAuth()}, 10800000);
 		}
 	}
 	
 	getAuthCookie () {
 		return this.#cookieSLNET;
+	}
+	
+	setAuthCookie (cookie) {
+		this.#cookieSLNET = cookie;
 	}
 	
 	getUserId () {
