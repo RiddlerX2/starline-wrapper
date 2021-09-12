@@ -169,9 +169,9 @@ class StarlineAuth extends StarlineURLs {
 		this.#login = login;
 		this.#password = password;
 		this.doAuth();
-		/*Refresh authorization each 3 hours (max lifetime 4 hours)*/
+		/*Refresh authorization each 20 hours (max lifetime 24 hours)*/
 		if (!!autoRefresh) {
-			setInterval(() => {this.doAuth()}, 10800000);
+			setInterval(() => {this.doAuth()}, 20*60*60*1000);
 		}
 	}
 	
