@@ -289,7 +289,7 @@ class Command extends Starline {
 					if (error) {
 						reject(error);
 					}
-					resolve(data.cmd_id);
+					resolve(data);
 				});
 			} else {
 				reject(false);
