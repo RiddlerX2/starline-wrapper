@@ -304,7 +304,7 @@ class Command extends Starline {
 }
 
 /*Check state of the executed command*/
-class State extends Command {
+class State extends Starline {
 	commandID;
 
 	execute() {
