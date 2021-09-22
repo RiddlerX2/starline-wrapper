@@ -305,6 +305,7 @@ class Command extends Starline {
 
 /*Check state of the executed command*/
 class State extends Starline {
+	deviceID;
 	commandID;
 
 	execute() {
@@ -324,7 +325,8 @@ class State extends Starline {
 	}
 
 	constructor(authObject, deviceID, commandID) {
-		super(authObject, deviceID);
+		super(authObject);
+		this.deviceID = deviceID;
 		this.commandID = commandID;
 	}
 }
