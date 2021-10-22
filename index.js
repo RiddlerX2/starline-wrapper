@@ -107,6 +107,7 @@ class StarlineAuth extends StarlineURLs {
 	failData;
 	
 	doAuth () {
+		console.log(new Date(), 'Start auth into SLNet');
 		this.setAuthCookie('');
 		/*4 steps for authorization on SLNET*/
 		this.#md5secret = crypto.createHash('md5').update(this.#secret).digest('hex');
@@ -136,6 +137,7 @@ class StarlineAuth extends StarlineURLs {
 														let cookie = headers['set-cookie'][0];
 														cookie = cookie.substring(0, cookie.indexOf(';'));
 														this.setAuthCookie(cookie);
+														console.log(new Date(), 'Complete auth into SLNet');
 													} else {
 														this.#failed = true;
 														this.failData = error || data;
