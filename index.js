@@ -266,7 +266,7 @@ class Beacons extends Starline {
 					}
 				});
 			} else {
-				resolve(false);
+				reject(false);
 			}
 		});
 	}
