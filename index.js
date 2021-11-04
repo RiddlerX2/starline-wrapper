@@ -146,28 +146,24 @@ class StarlineAuth extends StarlineURLs {
 													} else {
 														this.#failed = true;
 														this.failData = error || data;
-														console.log(new Date(), error || data);
 													}
 												}
 											);
 										} else {
 											this.#failed = true;
 											this.failData = error || data;
-											console.log(new Date(), error || data);
 										}
 									}
 								);
 							} else {
 								this.#failed = true;
 								this.failData = error || data;
-								console.log(new Date(), error || data);
 							}
 						}
 					);
 				} else {
 					this.#failed = true;
 					this.failData = error || data;
-					console.log(new Date(), error || data);
 				}
 			}
 		);
