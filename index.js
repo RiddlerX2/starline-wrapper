@@ -106,8 +106,14 @@ class StarlineAuth extends StarlineURLs {
 	#failed;
 	failData;
 	
-	doAuth () {
-		this.setAuthCookie('');
+	doAuth (reuseToken) {
+		if (reuseToken) {
+			this.setAuthCookie(reuseToken);
+			return reuseToken;
+		} else {
+			this.setAuthCookie('');
+		}
+		
 		/*4 steps for authorization on SLNET*/
 		this.#md5secret = crypto.createHash('md5').update(this.#secret).digest('hex');
 		/*Step 1*/
@@ -136,39 +142,44 @@ class StarlineAuth extends StarlineURLs {
 														let cookie = headers['set-cookie'][0];
 														cookie = cookie.substring(0, cookie.indexOf(';'));
 														this.setAuthCookie(cookie);
+														return cookie;
 													} else {
 														this.#failed = true;
 														this.failData = error || data;
+														console.log(new Date(), error || data);
 													}
 												}
 											);
 										} else {
 											this.#failed = true;
 											this.failData = error || data;
+											console.log(new Date(), error || data);
 										}
 									}
 								);
 							} else {
 								this.#failed = true;
 								this.failData = error || data;
+								console.log(new Date(), error || data);
 							}
 						}
 					);
 				} else {
 					this.#failed = true;
 					this.failData = error || data;
+					console.log(new Date(), error || data);
 				}
 			}
 		);
 	}
 	
-	constructor (appId, secret, login, password, autoRefresh) {
+	constructor (appId, secret, login, password, autoRefresh, reuseToken) {
 		super();
 		this.#appId = appId;
 		this.#secret = secret;
 		this.#login = login;
 		this.#password = password;
-		this.doAuth();
+		this.doAuth(reuseToken);
 		/*Refresh authorization each 20 hours (max lifetime 24 hours)*/
 		if (!!autoRefresh) {
 			setInterval(() => {this.doAuth()}, 20*60*60*1000);
