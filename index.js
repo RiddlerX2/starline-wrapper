@@ -106,9 +106,10 @@ class StarlineAuth extends StarlineURLs {
 	#failed;
 	failData;
 	
-	doAuth (reuseToken) {
+	doAuth (reuseToken, reuseUser) {
 		if (reuseToken) {
 			this.setAuthCookie(reuseToken);
+			this.#userId = reuseUser;
 			return reuseToken;
 		} else {
 			this.setAuthCookie('');
@@ -169,13 +170,13 @@ class StarlineAuth extends StarlineURLs {
 		);
 	}
 	
-	constructor (appId, secret, login, password, autoRefresh, reuseToken) {
+	constructor (appId, secret, login, password, autoRefresh, reuseToken, reuseUser) {
 		super();
 		this.#appId = appId;
 		this.#secret = secret;
 		this.#login = login;
 		this.#password = password;
-		this.doAuth(reuseToken);
+		this.doAuth(reuseToken, reuseUser);
 		/*Refresh authorization each 20 hours (max lifetime 24 hours)*/
 		if (!!autoRefresh) {
 			setInterval(() => {this.doAuth()}, 20*60*60*1000);
