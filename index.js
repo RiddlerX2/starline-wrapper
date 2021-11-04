@@ -1,9 +1,9 @@
 /*
-	Starline wrapper v.1.0.x
+	Starline wrapper v.1.2.x
 	Module provide simple access to REST API of the Starline alarm config and navigation data
 	
 	For more information about operations and its parameters look at:
-		https://developer.starline.ru/#api-_
+		https://developer.starline.ru/#/
 */
 
 /*Define dependencies*/
@@ -49,7 +49,7 @@ class StarlineURLs extends Basis {
 	apiPrefix = 'https://developer.starline.ru/json/';
 	
 	apiURL(version, subject, id, command) {
-		return `${this.apiPrefix}v${version}/${subject}/${id}/${command}`;
+		return `${this.apiPrefix}${(version)?'v'+version+'/':''}${subject}/${id}/${command}`;
 	}
 
 	/*Unified execute action with callback*/
@@ -254,8 +254,8 @@ class Beacons extends Starline {
 	updateList() {
 		return new Promise(async (resolve, reject) => {
 			if (super.isReady()) {
-				let url = this.apiURL(2, 'user', this.getUserId(), 'user_info');
-				this.execute(url, 'POST', {Cookie : this.getAuthCookie()}, null, null, (error, data) => {
+				let url = this.apiURL(3, 'user', this.getUserId(), 'data');
+				this.execute(url, 'GET', {Cookie : this.getAuthCookie()}, null, null, (error, data) => {
 					if (error) {
 						reject(error);
 					}
@@ -379,8 +379,8 @@ class ODB extends Starline {
 	execute() {
 		return new Promise((resolve, reject) => {
 			if (this.isReady()) {
-				let url = this.apiURL(1, 'device', this.deviceID, 'obd_params');
-				super.execute(url, 'POST', {Cookie : this.getAuthCookie()}, null, null, (error, data) => {
+				let url = this.apiURL(0, 'device', this.deviceID, 'obd_params');
+				super.execute(url, 'GET', {Cookie : this.getAuthCookie()}, null, null, (error, data) => {
 					if (error) {
 						reject(error);
 					}

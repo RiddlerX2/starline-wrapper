@@ -1,6 +1,6 @@
 {
   "name": "starline-wrapper",
-  "version": "1.1.2",
+  "version": "1.2.2",
   "description": "Module provide simple access to REST API of the Starline alarm config and navigation data",
   "main": "index.js",
   "scripts": {
