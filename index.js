@@ -260,7 +260,7 @@ class Beacons extends Starline {
 					if (error) {
 						reject(error);
 					}
-					this.list = data.user_data.devices;
+					this.list = (data.user_data || {}).devices;
 					resolve(true);
 					if (this.autoUpdate) {
 						setTimeout(this.updateList, 600000);
