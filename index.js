@@ -278,6 +278,41 @@ class Beacons extends Starline {
 	}
 }
 
+/*Beacon list*/
+class BeaconsOld extends Starline {
+	list;
+	autoUpdate = false;
+	
+	isReady() {
+		return !!(this.list);
+	}
+	
+	updateList() {
+		return new Promise(async (resolve, reject) => {
+			if (super.isReady()) {
+				let url = this.apiURL(0, 'user', this.getUserId(), 'user_info');
+				this.execute(url, 'GET', {Cookie : this.getAuthCookie()}, null, null, (error, data) => {
+					if (error) {
+						reject(error);
+					}
+					this.list = (data || {}).devices;
+					resolve(true);
+					if (this.autoUpdate) {
+						setTimeout(this.updateList, 600000);
+					}
+				});
+			} else {
+				reject(false);
+			}
+		});
+	}
+	
+	constructor(authObject, autoUpdate) {
+		super(authObject);
+		this.autoUpdate = !!(autoUpdate);
+	}
+}
+
 /*Executes async command*/
 class Command extends Starline {
 	deviceID;
@@ -403,6 +438,7 @@ class ODB extends Starline {
 exports.StarlineAuth = StarlineAuth;
 exports.Starline = Starline;
 exports.Beacons = Beacons;
+exports.BeaconsOld = BeaconsOld;
 exports.Command = Command;
 exports.State = State;
 exports.Track = Track;
